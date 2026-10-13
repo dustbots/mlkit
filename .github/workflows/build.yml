@@ -10,18 +10,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # This project uses Gradle 7.0 / Android Gradle Plugin 7.0, which needs JDK 11
-      - name: Set up JDK 11
+      # The Android SDK tools need JDK 17 or newer
+      - name: Set up JDK 17 (for SDK setup)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
       - name: Install SDK platform and build tools
         run: sdkmanager "platforms;android-31" "build-tools;30.0.3"
+
+      # This project uses Gradle 7.0 / Android Gradle Plugin 7.0, which needs JDK 11
+      - name: Switch to JDK 11 (for the build)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
 
       - name: Build debug APK
         working-directory: android/material-showcase
